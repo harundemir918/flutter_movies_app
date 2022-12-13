@@ -31,15 +31,23 @@ class AppRouter extends _i4.RootStackRouter {
       );
     },
     MoviesRoute.name: (routeData) {
+      final args = routeData.argsAs<MoviesRouteArgs>();
       return _i4.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i2.MoviesView(),
+        child: _i2.MoviesView(
+          key: args.key,
+          genre: args.genre,
+        ),
       );
     },
     DetailRoute.name: (routeData) {
+      final args = routeData.argsAs<DetailRouteArgs>();
       return _i4.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i3.DetailView(),
+        child: _i3.DetailView(
+          key: args.key,
+          id: args.id,
+        ),
       );
     },
   };
@@ -81,24 +89,68 @@ class HomeRoute extends _i4.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.MoviesView]
-class MoviesRoute extends _i4.PageRouteInfo<void> {
-  const MoviesRoute()
-      : super(
+class MoviesRoute extends _i4.PageRouteInfo<MoviesRouteArgs> {
+  MoviesRoute({
+    _i5.Key? key,
+    required String genre,
+  }) : super(
           MoviesRoute.name,
           path: '/movies',
+          args: MoviesRouteArgs(
+            key: key,
+            genre: genre,
+          ),
         );
 
   static const String name = 'MoviesRoute';
 }
 
+class MoviesRouteArgs {
+  const MoviesRouteArgs({
+    this.key,
+    required this.genre,
+  });
+
+  final _i5.Key? key;
+
+  final String genre;
+
+  @override
+  String toString() {
+    return 'MoviesRouteArgs{key: $key, genre: $genre}';
+  }
+}
+
 /// generated route for
 /// [_i3.DetailView]
-class DetailRoute extends _i4.PageRouteInfo<void> {
-  const DetailRoute()
-      : super(
+class DetailRoute extends _i4.PageRouteInfo<DetailRouteArgs> {
+  DetailRoute({
+    _i5.Key? key,
+    required int id,
+  }) : super(
           DetailRoute.name,
           path: '/detail',
+          args: DetailRouteArgs(
+            key: key,
+            id: id,
+          ),
         );
 
   static const String name = 'DetailRoute';
+}
+
+class DetailRouteArgs {
+  const DetailRouteArgs({
+    this.key,
+    required this.id,
+  });
+
+  final _i5.Key? key;
+
+  final int id;
+
+  @override
+  String toString() {
+    return 'DetailRouteArgs{key: $key, id: $id}';
+  }
 }
