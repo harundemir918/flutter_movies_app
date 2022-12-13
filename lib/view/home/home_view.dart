@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_app/view/widgets/genre_list_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/bloc/home/home_bloc.dart';
+import '../../core/models/genre_model.dart';
 import '../../core/utils/size_utils.dart';
+import '../widgets/genre_list_card.dart';
 import '../widgets/search_bar.dart';
+import '../widgets/try_again_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -12,6 +16,20 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  List<GenreModel> _genres = [];
+
+  @override
+  void initState() {
+    context.read<HomeBloc>().add(FetchGenresEvent());
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _genres = context.read<HomeBloc>().genresList;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +46,41 @@ class _HomeViewState extends State<HomeView> {
         right: 10,
         top: SizeUtils.getDynamicHeight(context, 0.05),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _homeHeader(),
-          const SizedBox(height: 10),
-          _homeGenreList(),
-        ],
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          if (state is HomeInitial || state is HomeLoading) {
+            return _buildHomeLoading();
+          }
+          if (state is HomeLoaded) {
+            return _buildHomeLoaded(state);
+          }
+          if (state is HomeFiltered) {
+            return _buildHomeLoaded(state);
+          } else {
+            return _buildHomeError();
+          }
+        },
       ),
+    );
+  }
+
+  Center _buildHomeLoading() =>
+      const Center(child: CircularProgressIndicator());
+
+  Column _buildHomeLoaded(dynamic state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _homeHeader(),
+        const SizedBox(height: 10),
+        _homeGenreList(genresList: state.genresList),
+      ],
+    );
+  }
+
+  TryAgainWidget _buildHomeError() {
+    return TryAgainWidget(
+      onPressed: () => context.read<HomeBloc>().add(FetchGenresEvent()),
     );
   }
 
@@ -69,32 +114,32 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Padding _homeSearchBar() {
-    return const Padding(
-      padding: EdgeInsets.only(
+    return Padding(
+      padding: const EdgeInsets.only(
         top: 20,
         bottom: 10,
       ),
-      child: SearchBar(),
+      child: SearchBar(
+        onChanged: (val) => context.read<HomeBloc>().add(
+              FilterGenresEvent(
+                val,
+                _genres,
+              ),
+            ),
+      ),
     );
   }
 
-  Flexible _homeGenreList() {
+  Flexible _homeGenreList({required List<GenreModel> genresList}) {
     return Flexible(
       child: ListView(
         padding: EdgeInsets.zero,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: const [
-          GenreListCard(id: 1, title: "Action"),
-          GenreListCard(id: 2, title: "Adventure"),
-          GenreListCard(id: 3, title: "Animation"),
-          GenreListCard(id: 4, title: "Comedy"),
-          GenreListCard(id: 5, title: "Crime"),
-          GenreListCard(id: 6, title: "Documentary"),
-          GenreListCard(id: 7, title: "Drama"),
-          GenreListCard(id: 8, title: "Family"),
-          GenreListCard(id: 9, title: "Fantasy"),
-          GenreListCard(id: 10, title: "History"),
-        ],
+        children: genresList
+            .map(
+              (genre) => GenreListCard(id: genre.id!, title: genre.name!),
+            )
+            .toList(),
       ),
     );
   }

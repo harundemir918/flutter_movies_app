@@ -1,12 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_app/core/models/movie_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/bloc/detail/detail_bloc.dart';
 import '../../core/models/genre_model.dart';
+import '../../core/models/movie_model.dart';
 import '../../core/utils/size_utils.dart';
+import '../widgets/try_again_widget.dart';
 
 class DetailView extends StatefulWidget {
   final int id;
+
   const DetailView({
     Key? key,
     required this.id,
@@ -17,21 +21,12 @@ class DetailView extends StatefulWidget {
 }
 
 class _DetailViewState extends State<DetailView> {
-  final MovieModel _movieModel = MovieModel(
-    id: 436270,
-    originalTitle: "Black Adam",
-    overview:
-        "Nearly 5,000 years after he was bestowed with the almighty powers of the Egyptian gods—and imprisoned just as quickly—Black Adam is freed from his earthly tomb, ready to unleash his unique form of justice on the modern world.",
-    genres: [
-      GenreModel(id: 28, name: "Action"),
-      GenreModel(id: 14, name: "Fantasy"),
-      GenreModel(id: 878, name: "Science Fiction"),
-    ],
-    posterPath: "/pFlaoHTZeyNkG83vxsAJiGzfSsa.jpg",
-    releaseDate: "2022-10-19",
-    runtime: 125,
-    voteAverage: 7.3,
-  );
+  @override
+  void initState() {
+    context.read<DetailBloc>().add(FetchDetailEvent(widget.id));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,38 +34,73 @@ class _DetailViewState extends State<DetailView> {
     );
   }
 
-  NestedScrollView _detailBody() {
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) => [
-        SliverAppBar(
-          expandedHeight: SizeUtils.getDynamicHeight(context, 0.6),
-          pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Container(
-              foregroundDecoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-              ),
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://image.tmdb.org/t/p/original/${_movieModel.posterPath!}",
-                fit: BoxFit.cover,
-              ),
-            ),
-            title: Text(
-              _movieModel.originalTitle!,
-              style: TextStyle(
-                fontSize: _movieModel.originalTitle!.length > 20 ? 14 : 18,
-              ),
-            ),
-            centerTitle: true,
-          ),
-        ),
-      ],
-      body: _detailContent(),
+  BlocBuilder<DetailBloc, DetailState> _detailBody() {
+    return BlocBuilder<DetailBloc, DetailState>(
+      builder: (context, state) {
+        if (state is DetailInitial || state is DetailLoading) {
+          return _buildDetailLoading();
+        }
+        if (state is DetailLoaded) {
+          return _buildDetailLoaded(state);
+        } else {
+          return _buildDetailError();
+        }
+      },
     );
   }
 
-  Widget _detailContent() {
+  Center _buildDetailLoading() =>
+      const Center(child: CircularProgressIndicator());
+
+  NestedScrollView _buildDetailLoaded(DetailLoaded state) {
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        _detailAppBar(
+          context,
+          state.movie.posterPath!,
+          state.movie.originalTitle!,
+        ),
+      ],
+      body: _detailContent(movie: state.movie),
+    );
+  }
+
+  SizedBox _buildDetailError() {
+    return SizedBox(
+      width: SizeUtils.getWidth(context),
+      child: TryAgainWidget(
+        onPressed: () =>
+            context.read<DetailBloc>().add(FetchDetailEvent(widget.id)),
+      ),
+    );
+  }
+
+  SliverAppBar _detailAppBar(BuildContext context, String url, String title) {
+    return SliverAppBar(
+      expandedHeight: SizeUtils.getDynamicHeight(context, 0.6),
+      pinned: true,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          foregroundDecoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.3),
+          ),
+          child: CachedNetworkImage(
+            imageUrl: "https://image.tmdb.org/t/p/original/$url",
+            fit: BoxFit.cover,
+          ),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: title.length > 20 ? 14 : 18,
+          ),
+        ),
+        centerTitle: true,
+      ),
+    );
+  }
+
+  Widget _detailContent({required MovieModel movie}) {
     return Container(
       margin: EdgeInsets.only(
         left: SizeUtils.getDynamicWidth(context, 0.05),
@@ -78,12 +108,16 @@ class _DetailViewState extends State<DetailView> {
       ),
       child: ListView(
         children: [
-          _detailSpecs(),
-          _detailInfo(title: "Overview", content: _movieModel.overview!),
-          _detailGenres(),
-          _detailInfo(title: "Release Date", content: _movieModel.releaseDate!),
+          _detailSpecs(
+            voteAverage: movie.voteAverage!.toStringAsFixed(1),
+            runtime: movie.runtime!.toString(),
+            releaseDate: movie.releaseDate!,
+          ),
+          _detailInfo(title: "Overview", content: movie.overview!),
+          _detailGenres(genresList: movie.genres!),
+          _detailInfo(title: "Release Date", content: movie.releaseDate!),
           _detailInfo(
-              title: "Movie Duration", content: "${_movieModel.runtime!} mins"),
+              title: "Movie Duration", content: "${movie.runtime!} mins"),
           SizedBox(
             height: SizeUtils.getDynamicHeight(context, 0.1),
           ),
@@ -92,7 +126,11 @@ class _DetailViewState extends State<DetailView> {
     );
   }
 
-  Padding _detailSpecs() {
+  Padding _detailSpecs({
+    required String voteAverage,
+    required String runtime,
+    required String releaseDate,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
@@ -106,7 +144,7 @@ class _DetailViewState extends State<DetailView> {
                 color: Colors.black,
               ),
               TextSpan(
-                text: _movieModel.voteAverage!.toString(),
+                text: voteAverage,
                 children: const [
                   TextSpan(text: "/10", style: TextStyle(fontSize: 12)),
                 ],
@@ -116,7 +154,7 @@ class _DetailViewState extends State<DetailView> {
           ),
           _detailSpecsCard(
             content: Text(
-              "${_movieModel.runtime!.toString()} mins",
+              "$runtime mins",
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -127,7 +165,7 @@ class _DetailViewState extends State<DetailView> {
           ),
           _detailSpecsCard(
             content: Text(
-              _movieModel.releaseDate!.substring(0, 4),
+              releaseDate.substring(0, 4),
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -151,7 +189,7 @@ class _DetailViewState extends State<DetailView> {
     );
   }
 
-  Column _detailGenres() {
+  Column _detailGenres({required List<GenreModel> genresList}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -169,7 +207,7 @@ class _DetailViewState extends State<DetailView> {
           height: SizeUtils.getDynamicHeight(context, 0.075),
           child: ListView(
             scrollDirection: Axis.horizontal,
-            children: _movieModel.genres!
+            children: genresList
                 .map((genre) => Card(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),

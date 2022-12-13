@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_app/core/router/app_router.gr.dart';
 
+import '../../core/router/app_router.gr.dart';
 import '../../core/utils/size_utils.dart';
 
 class MovieListCard extends StatelessWidget {
@@ -10,7 +10,7 @@ class MovieListCard extends StatelessWidget {
   final String title;
   final String image;
   final String year;
-  final String genre;
+  final String runtime;
   final double averageVote;
 
   const MovieListCard({
@@ -19,7 +19,7 @@ class MovieListCard extends StatelessWidget {
     required this.title,
     required this.image,
     required this.year,
-    required this.genre,
+    required this.runtime,
     required this.averageVote,
   });
 
@@ -112,7 +112,7 @@ class MovieListCard extends StatelessWidget {
             children: [
               _movieListCardYear(),
               _movieListCardDotSign(),
-              _movieListCardGenre(),
+              _movieListCardDuration(),
             ],
           ),
         ],
@@ -152,7 +152,7 @@ class MovieListCard extends StatelessWidget {
     );
   }
 
-  Text _movieListCardGenre() => Text(genre);
+  Text _movieListCardDuration() => Text(runtime);
 
   Text _movieListCardTitle() {
     return Text(

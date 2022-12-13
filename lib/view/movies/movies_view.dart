@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_app/view/widgets/search_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/bloc/movies/movies_bloc.dart';
+import '../../core/models/movie_model.dart';
 import '../../core/utils/size_utils.dart';
 import '../widgets/movie_list_card.dart';
+import '../widgets/search_bar.dart';
+import '../widgets/try_again_widget.dart';
 
 class MoviesView extends StatefulWidget {
   final String genre;
@@ -14,6 +18,20 @@ class MoviesView extends StatefulWidget {
 }
 
 class _MoviesViewState extends State<MoviesView> {
+  List<MovieModel> _movies = [];
+
+  @override
+  void initState() {
+    context.read<MoviesBloc>().add(FetchMoviesEvent());
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _movies = context.read<MoviesBloc>().moviesList;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,114 +65,78 @@ class _MoviesViewState extends State<MoviesView> {
         right: 10,
         top: SizeUtils.getDynamicHeight(context, 0.1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _moviesSearchBar(),
-          const SizedBox(height: 10),
-          _moviesList(),
-        ],
+      child: BlocBuilder<MoviesBloc, MoviesState>(
+        builder: (context, state) {
+          if (state is MoviesInitial || state is MoviesLoading) {
+            return _buildMoviesLoading();
+          }
+          if (state is MoviesLoaded) {
+            return _buildMoviesLoaded(state);
+          }
+          if (state is MoviesFiltered) {
+            return _buildMoviesLoaded(state);
+          } else {
+            return _buildMoviesError();
+          }
+        },
       ),
+    );
+  }
+
+  Center _buildMoviesLoading() =>
+      const Center(child: CircularProgressIndicator());
+
+  Column _buildMoviesLoaded(dynamic state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _moviesSearchBar(),
+        const SizedBox(height: 10),
+        _moviesList(moviesList: state.moviesList),
+      ],
+    );
+  }
+
+  TryAgainWidget _buildMoviesError() {
+    return TryAgainWidget(
+      onPressed: () => context.read<MoviesBloc>().add(FetchMoviesEvent()),
     );
   }
 
   Padding _moviesSearchBar() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(
+    return Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 20,
       ),
-      child: SearchBar(),
+      child: SearchBar(
+        onChanged: (val) => context.read<MoviesBloc>().add(
+              FilterMoviesEvent(
+                val,
+                _movies,
+              ),
+            ),
+      ),
     );
   }
 
-  Flexible _moviesList() {
+  Flexible _moviesList({required List<MovieModel> moviesList}) {
     return Flexible(
       child: ListView(
         padding: EdgeInsets.zero,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: const [
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Troll",
-            genre: "Action",
-            image: "/53BC9F2tpZnsGno2cLhzvGprDYS.jpg",
-            year: "2022-12-01",
-            averageVote: 6.8,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "The Woman King",
-            genre: "Action",
-            image: "/7zQJYV02yehWrQN6NjKsBorqUUS.jpg",
-            year: "2022-09-15",
-            averageVote: 7.9,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-          MovieListCard(
-            id: 1,
-            title: "Black Adam",
-            genre: "Action",
-            image: "/bQXAqRx2Fgc46uCVWgoPz5L5Dtr.jpg",
-            year: "2022-10-19",
-            averageVote: 7.3,
-          ),
-        ],
+        children: moviesList
+            .map(
+              (movie) => MovieListCard(
+                id: movie.id!,
+                title: movie.title!,
+                runtime: "${movie.runtime!} mins",
+                image: movie.backdropPath!,
+                year: movie.releaseDate!,
+                averageVote: movie.voteAverage!,
+              ),
+            )
+            .toList(),
       ),
     );
   }
