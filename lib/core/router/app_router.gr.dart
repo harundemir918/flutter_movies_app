@@ -36,6 +36,7 @@ class AppRouter extends _i4.RootStackRouter {
         routeData: routeData,
         child: _i2.MoviesView(
           key: args.key,
+          id: args.id,
           genre: args.genre,
         ),
       );
@@ -92,12 +93,14 @@ class HomeRoute extends _i4.PageRouteInfo<void> {
 class MoviesRoute extends _i4.PageRouteInfo<MoviesRouteArgs> {
   MoviesRoute({
     _i5.Key? key,
+    required int id,
     required String genre,
   }) : super(
           MoviesRoute.name,
           path: '/movies',
           args: MoviesRouteArgs(
             key: key,
+            id: id,
             genre: genre,
           ),
         );
@@ -108,16 +111,19 @@ class MoviesRoute extends _i4.PageRouteInfo<MoviesRouteArgs> {
 class MoviesRouteArgs {
   const MoviesRouteArgs({
     this.key,
+    required this.id,
     required this.genre,
   });
 
   final _i5.Key? key;
 
+  final int id;
+
   final String genre;
 
   @override
   String toString() {
-    return 'MoviesRouteArgs{key: $key, genre: $genre}';
+    return 'MoviesRouteArgs{key: $key, id: $id, genre: $genre}';
   }
 }
 

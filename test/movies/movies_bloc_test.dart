@@ -1,19 +1,19 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_movies_app/core/bloc/movies/movies_bloc.dart';
 import 'package:flutter_movies_app/core/resources/mock/mock_movies.dart';
-import 'package:flutter_movies_app/core/resources/repository/movies/movies_repository.dart';
+import 'package:flutter_movies_app/core/resources/repository/movies/fake/fake_movies_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'movies_bloc_test.mocks.dart';
 
-@GenerateMocks([MoviesRepository])
+@GenerateMocks([FakeMoviesRepository])
 void main() {
-  late MockMoviesRepository mockMoviesRepository;
+  late MockFakeMoviesRepository mockMoviesRepository;
 
   setUp(() {
-    mockMoviesRepository = MockMoviesRepository();
+    mockMoviesRepository = MockFakeMoviesRepository();
   });
 
   group("Test MoviesBloc", () {
@@ -21,11 +21,11 @@ void main() {
       blocTest(
         "fetch moviesList and emit [MoviesLoading, MoviesLoaded] states when successful",
         build: () {
-          when(mockMoviesRepository.fetchMoviesList())
+          when(mockMoviesRepository.fetchMoviesList(id: 1))
               .thenAnswer((_) async => mockMoviesList);
           return MoviesBloc(mockMoviesRepository);
         },
-        act: (bloc) => bloc.add(FetchMoviesEvent()),
+        act: (bloc) => bloc.add(const FetchMoviesEvent(id: 1)),
         wait: const Duration(seconds: 1),
         expect: () => [MoviesLoading(), MoviesLoaded(mockMoviesList)],
       );
@@ -33,11 +33,11 @@ void main() {
       blocTest(
         "throw exception and emit [MoviesLoading, MoviesError] states when failed",
         build: () {
-          when(mockMoviesRepository.fetchMoviesList())
+          when(mockMoviesRepository.fetchMoviesList(id: 1))
               .thenThrow(Exception("Failed to fetch data."));
           return MoviesBloc(mockMoviesRepository);
         },
-        act: (bloc) => bloc.add(FetchMoviesEvent()),
+        act: (bloc) => bloc.add(const FetchMoviesEvent(id: 1)),
         wait: const Duration(seconds: 1),
         expect: () =>
             [MoviesLoading(), MoviesError("Exception: Failed to fetch data.")],

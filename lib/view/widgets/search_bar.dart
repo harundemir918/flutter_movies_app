@@ -16,18 +16,9 @@ class _SearchBarState extends State<SearchBar> {
       cursorColor: Colors.red,
       style: const TextStyle(color: Colors.red),
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(width: 1, color: Colors.red),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(width: 1, color: Colors.red),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(width: 2, color: Colors.red),
-        ),
+        border: textFieldOutlineBorder(),
+        enabledBorder: textFieldOutlineBorder(),
+        focusedBorder: textFieldOutlineBorder(width: 2),
         hintText: "Search",
         hintStyle: TextStyle(color: Colors.red.withOpacity(0.5)),
         prefixIcon: const Icon(Icons.search, color: Colors.red),
@@ -36,4 +27,10 @@ class _SearchBarState extends State<SearchBar> {
       onChanged: widget.onChanged,
     );
   }
+
+  OutlineInputBorder textFieldOutlineBorder({double width = 1}) =>
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(width: width, color: Colors.red),
+      );
 }

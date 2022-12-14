@@ -1,7 +1,7 @@
 import '../../../models/movie_model.dart';
 
 abstract class AbstractMoviesRepository {
-  Future<List<MovieModel>> fetchMoviesList();
+  Future<List<MovieModel>> fetchMoviesList({required int id});
 
   Future<MovieModel> fetchMovieDetail(int id);
 

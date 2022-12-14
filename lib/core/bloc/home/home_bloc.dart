@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_movies_app/core/resources/repository/abstract/abstract_genres_repository.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/genre_model.dart';
+import '../../resources/repository/abstract/abstract_genres_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';

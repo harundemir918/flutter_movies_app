@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/bloc/detail/detail_bloc.dart';
 import '../../core/models/genre_model.dart';
@@ -58,7 +59,7 @@ class _DetailViewState extends State<DetailView> {
         _detailAppBar(
           context,
           state.movie.posterPath!,
-          state.movie.originalTitle!,
+          state.movie.title!,
         ),
       ],
       body: _detailContent(movie: state.movie),
@@ -87,6 +88,11 @@ class _DetailViewState extends State<DetailView> {
           child: CachedNetworkImage(
             imageUrl: "https://image.tmdb.org/t/p/original/$url",
             fit: BoxFit.cover,
+            progressIndicatorBuilder: (context, _, progress) => const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
           ),
         ),
         title: Text(
@@ -165,7 +171,9 @@ class _DetailViewState extends State<DetailView> {
           ),
           _detailSpecsCard(
             content: Text(
-              releaseDate.substring(0, 4),
+              DateFormat("yyyy").format(
+                DateTime.parse(releaseDate),
+              ),
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

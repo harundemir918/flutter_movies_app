@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/bloc/detail/detail_bloc.dart';
 import 'core/bloc/home/home_bloc.dart';
 import 'core/bloc/movies/movies_bloc.dart';
+import 'core/constants/constants.dart';
 import 'core/resources/repository/genres/genres_repository.dart';
 import 'core/resources/repository/movies/movies_repository.dart';
 import 'core/router/app_router.gr.dart';
@@ -24,14 +25,15 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) =>
-                HomeBloc(_genresRepository)..add(FetchGenresEvent())),
+          create: (context) =>
+              HomeBloc(_genresRepository)..add(FetchGenresEvent()),
+        ),
         BlocProvider(create: (context) => MoviesBloc(_moviesRepository)),
         BlocProvider(create: (context) => DetailBloc(_moviesRepository)),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        title: 'Movies App',
+        title: appName,
         theme: ThemeData(
           primarySwatch: Colors.red,
           fontFamily: "Poppins",

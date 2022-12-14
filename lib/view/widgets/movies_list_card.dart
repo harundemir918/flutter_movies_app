@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/router/app_router.gr.dart';
 import '../../core/utils/size_utils.dart';
@@ -8,19 +9,19 @@ import '../../core/utils/size_utils.dart';
 class MoviesListCard extends StatelessWidget {
   final int id;
   final String title;
-  final String image;
-  final String year;
-  final String runtime;
-  final double averageVote;
+  final String posterPath;
+  final String releaseDate;
+  final String originalLanguage;
+  final double voteAverage;
 
   const MoviesListCard({
     super.key,
     required this.id,
     required this.title,
-    required this.image,
-    required this.year,
-    required this.runtime,
-    required this.averageVote,
+    required this.posterPath,
+    required this.releaseDate,
+    required this.originalLanguage,
+    required this.voteAverage,
   });
 
   @override
@@ -81,8 +82,11 @@ class MoviesListCard extends StatelessWidget {
       width: SizeUtils.getDynamicWidth(context, 0.25),
       height: SizeUtils.getDynamicHeight(context, 0.15),
       child: CachedNetworkImage(
-        imageUrl: "https://image.tmdb.org/t/p/w500/$image",
+        imageUrl: "https://image.tmdb.org/t/p/w500/$posterPath",
         fit: BoxFit.cover,
+        progressIndicatorBuilder: (context, _, progress) => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
@@ -112,7 +116,7 @@ class MoviesListCard extends StatelessWidget {
             children: [
               _moviesListCardYear(),
               _moviesListCardDotSign(),
-              _moviesListCardDuration(),
+              _moviesListCardOriginalLanguage(),
             ],
           ),
         ],
@@ -120,7 +124,14 @@ class MoviesListCard extends StatelessWidget {
     );
   }
 
-  Text _moviesListCardYear() => Text(year);
+  Expanded _moviesListCardYear() => Expanded(
+        flex: 2,
+        child: Text(
+          DateFormat("MMM d, yyyy").format(
+            DateTime.parse(releaseDate),
+          ),
+        ),
+      );
 
   Padding _moviesListCardDotSign() {
     return const Padding(
@@ -143,7 +154,7 @@ class MoviesListCard extends StatelessWidget {
           color: Colors.amber,
         ),
         Text(
-          averageVote.toStringAsFixed(1),
+          voteAverage.toStringAsFixed(1),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -152,7 +163,11 @@ class MoviesListCard extends StatelessWidget {
     );
   }
 
-  Text _moviesListCardDuration() => Text(runtime);
+  Expanded _moviesListCardOriginalLanguage() => Expanded(
+        child: Text(
+          originalLanguage.toUpperCase(),
+        ),
+      );
 
   Text _moviesListCardTitle() {
     return Text(

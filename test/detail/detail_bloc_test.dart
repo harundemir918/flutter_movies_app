@@ -1,19 +1,19 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_movies_app/core/bloc/detail/detail_bloc.dart';
 import 'package:flutter_movies_app/core/resources/mock/mock_movies.dart';
-import 'package:flutter_movies_app/core/resources/repository/movies/movies_repository.dart';
+import 'package:flutter_movies_app/core/resources/repository/movies/fake/fake_movies_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'detail_bloc_test.mocks.dart';
 
-@GenerateMocks([MoviesRepository])
+@GenerateMocks([FakeMoviesRepository])
 void main() {
-  late MockMoviesRepository mockMoviesRepository;
+  late MockFakeMoviesRepository mockMoviesRepository;
 
   setUp(() {
-    mockMoviesRepository = MockMoviesRepository();
+    mockMoviesRepository = MockFakeMoviesRepository();
   });
 
   group("Test DetailBloc", () {

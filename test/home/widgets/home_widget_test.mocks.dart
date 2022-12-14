@@ -10,7 +10,7 @@ import 'package:flutter_movies_app/core/bloc/home/home_bloc.dart' as _i3;
 import 'package:flutter_movies_app/core/models/genre_model.dart' as _i4;
 import 'package:flutter_movies_app/core/resources/repository/abstract/abstract_genres_repository.dart'
     as _i2;
-import 'package:flutter_movies_app/core/resources/repository/genres/genres_repository.dart'
+import 'package:flutter_movies_app/core/resources/repository/genres/fake/fake_genres_repository.dart'
     as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -220,11 +220,12 @@ class MockHomeState extends _i1.Mock implements _i3.HomeState {
       ) as List<Object?>);
 }
 
-/// A class which mocks [GenresRepository].
+/// A class which mocks [FakeGenresRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGenresRepository extends _i1.Mock implements _i7.GenresRepository {
-  MockGenresRepository() {
+class MockFakeGenresRepository extends _i1.Mock
+    implements _i7.FakeGenresRepository {
+  MockFakeGenresRepository() {
     _i1.throwOnMissingStub(this);
   }
 

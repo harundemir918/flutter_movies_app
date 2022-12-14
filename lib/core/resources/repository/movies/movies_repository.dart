@@ -6,8 +6,8 @@ class MoviesRepository extends AbstractMoviesRepository {
   final MoviesProvider _moviesProvider = MoviesProvider();
 
   @override
-  Future<List<MovieModel>> fetchMoviesList() =>
-      _moviesProvider.fetchMoviesList();
+  Future<List<MovieModel>> fetchMoviesList({required int id}) =>
+      _moviesProvider.fetchMoviesList(id: id);
 
   @override
   Future<MovieModel> fetchMovieDetail(int id) =>

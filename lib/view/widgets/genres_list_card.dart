@@ -15,7 +15,7 @@ class GenresListCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-        context.router.navigate(MoviesRoute(genre: title));
+        context.router.navigate(MoviesRoute(id: id, genre: title));
       },
       child: _genresListCardBody(context),
     );

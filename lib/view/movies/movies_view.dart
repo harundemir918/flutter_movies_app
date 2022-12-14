@@ -4,14 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/bloc/movies/movies_bloc.dart';
 import '../../core/models/movie_model.dart';
 import '../../core/utils/size_utils.dart';
-import '../widgets/movie_list_card.dart';
+import '../widgets/movies_list_card.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/try_again_widget.dart';
 
 class MoviesView extends StatefulWidget {
+  final int id;
   final String genre;
 
-  const MoviesView({Key? key, required this.genre}) : super(key: key);
+  const MoviesView({
+    Key? key,
+    required this.id,
+    required this.genre,
+  }) : super(key: key);
 
   @override
   State<MoviesView> createState() => _MoviesViewState();
@@ -22,7 +27,7 @@ class _MoviesViewState extends State<MoviesView> {
 
   @override
   void initState() {
-    context.read<MoviesBloc>().add(FetchMoviesEvent());
+    context.read<MoviesBloc>().add(FetchMoviesEvent(id: widget.id));
     super.initState();
   }
 
@@ -99,7 +104,8 @@ class _MoviesViewState extends State<MoviesView> {
 
   TryAgainWidget _buildMoviesError() {
     return TryAgainWidget(
-      onPressed: () => context.read<MoviesBloc>().add(FetchMoviesEvent()),
+      onPressed: () =>
+          context.read<MoviesBloc>().add(FetchMoviesEvent(id: widget.id)),
     );
   }
 
@@ -130,10 +136,10 @@ class _MoviesViewState extends State<MoviesView> {
               (movie) => MoviesListCard(
                 id: movie.id!,
                 title: movie.title!,
-                runtime: "${movie.runtime!} mins",
-                image: movie.backdropPath!,
-                year: movie.releaseDate!,
-                averageVote: movie.voteAverage!,
+                posterPath: movie.posterPath!,
+                releaseDate: movie.releaseDate!,
+                originalLanguage: movie.originalLanguage!,
+                voteAverage: movie.voteAverage!,
               ),
             )
             .toList(),

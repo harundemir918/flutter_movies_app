@@ -6,7 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:flutter_movies_app/core/models/movie_model.dart' as _i2;
-import 'package:flutter_movies_app/core/resources/repository/movies/movies_repository.dart'
+import 'package:flutter_movies_app/core/resources/repository/movies/fake/fake_movies_repository.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -31,19 +31,22 @@ class _FakeMovieModel_0 extends _i1.SmartFake implements _i2.MovieModel {
         );
 }
 
-/// A class which mocks [MoviesRepository].
+/// A class which mocks [FakeMoviesRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMoviesRepository extends _i1.Mock implements _i3.MoviesRepository {
-  MockMoviesRepository() {
+class MockFakeMoviesRepository extends _i1.Mock
+    implements _i3.FakeMoviesRepository {
+  MockFakeMoviesRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<List<_i2.MovieModel>> fetchMoviesList() => (super.noSuchMethod(
+  _i4.Future<List<_i2.MovieModel>> fetchMoviesList({required int? id}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetchMoviesList,
           [],
+          {#id: id},
         ),
         returnValue: _i4.Future<List<_i2.MovieModel>>.value(<_i2.MovieModel>[]),
       ) as _i4.Future<List<_i2.MovieModel>>);

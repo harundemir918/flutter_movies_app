@@ -1,19 +1,19 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_movies_app/core/bloc/home/home_bloc.dart';
 import 'package:flutter_movies_app/core/resources/mock/mock_movies.dart';
-import 'package:flutter_movies_app/core/resources/repository/genres/genres_repository.dart';
+import 'package:flutter_movies_app/core/resources/repository/genres/fake/fake_genres_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'home_bloc_test.mocks.dart';
 
-@GenerateMocks([GenresRepository])
+@GenerateMocks([FakeGenresRepository])
 void main() {
-  late MockGenresRepository mockGenresRepository;
+  late MockFakeGenresRepository mockGenresRepository;
 
   setUp(() {
-    mockGenresRepository = MockGenresRepository();
+    mockGenresRepository = MockFakeGenresRepository();
   });
 
   group("Test HomeBloc", () {

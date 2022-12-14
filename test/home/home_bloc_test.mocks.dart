@@ -6,7 +6,7 @@
 import 'dart:async' as _i3;
 
 import 'package:flutter_movies_app/core/models/genre_model.dart' as _i4;
-import 'package:flutter_movies_app/core/resources/repository/genres/genres_repository.dart'
+import 'package:flutter_movies_app/core/resources/repository/genres/fake/fake_genres_repository.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -21,11 +21,12 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-/// A class which mocks [GenresRepository].
+/// A class which mocks [FakeGenresRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGenresRepository extends _i1.Mock implements _i2.GenresRepository {
-  MockGenresRepository() {
+class MockFakeGenresRepository extends _i1.Mock
+    implements _i2.FakeGenresRepository {
+  MockFakeGenresRepository() {
     _i1.throwOnMissingStub(this);
   }
 

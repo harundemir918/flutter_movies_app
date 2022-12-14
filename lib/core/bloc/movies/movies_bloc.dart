@@ -16,7 +16,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     on<FetchMoviesEvent>((event, emit) async {
       try {
         emit(MoviesLoading());
-        moviesList = await moviesRepository.fetchMoviesList();
+        moviesList = await moviesRepository.fetchMoviesList(id: event.id);
         emit(MoviesLoaded(moviesList));
       } catch (e) {
         emit(MoviesError(e.toString()));
