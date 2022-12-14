@@ -127,7 +127,7 @@ class _MoviesViewState extends State<MoviesView> {
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: moviesList
             .map(
-              (movie) => MovieListCard(
+              (movie) => MoviesListCard(
                 id: movie.id!,
                 title: movie.title!,
                 runtime: "${movie.runtime!} mins",

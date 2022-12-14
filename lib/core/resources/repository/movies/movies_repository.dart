@@ -1,28 +1,22 @@
-import '../models/genre_model.dart';
-import '../models/movie_model.dart';
+import '../../../models/movie_model.dart';
+import '../abstract/abstract_movies_repository.dart';
 import 'movies_provider.dart';
 
-class MoviesRepository {
+class MoviesRepository extends AbstractMoviesRepository {
   final MoviesProvider _moviesProvider = MoviesProvider();
 
-  Future<List<GenreModel>> fetchGenresList() =>
-      _moviesProvider.fetchGenresList();
-
+  @override
   Future<List<MovieModel>> fetchMoviesList() =>
       _moviesProvider.fetchMoviesList();
 
+  @override
   Future<MovieModel> fetchMovieDetail(int id) =>
       _moviesProvider.fetchMovieDetail(id);
 
+  @override
   List<MovieModel> filterMoviesList(
     String keyword,
     List<MovieModel> moviesList,
   ) =>
       _moviesProvider.filterMoviesList(keyword, moviesList);
-
-  List<GenreModel> filterGenresList(
-    String keyword,
-    List<GenreModel> genresList,
-  ) =>
-      _moviesProvider.filterGenresList(keyword, genresList);
 }

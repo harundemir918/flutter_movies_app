@@ -10,8 +10,12 @@ class TryAgainWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Failed to fetch data."),
+        const Text(
+          key: ValueKey("tryAgainText"),
+          "Failed to fetch data.",
+        ),
         ElevatedButton.icon(
+          key: const ValueKey("tryAgainButton"),
           onPressed: onPressed,
           icon: const Icon(Icons.refresh),
           label: const Text("Try again"),

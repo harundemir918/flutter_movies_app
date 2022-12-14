@@ -3,20 +3,20 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/movie_model.dart';
-import '../../resources/movies_repository.dart';
+import '../../resources/repository/abstract/abstract_movies_repository.dart';
 
 part 'movies_event.dart';
 part 'movies_state.dart';
 
 class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
-  final MoviesRepository _moviesRepository = MoviesRepository();
+  final AbstractMoviesRepository moviesRepository;
   List<MovieModel> moviesList = [];
 
-  MoviesBloc() : super(MoviesInitial()) {
+  MoviesBloc(this.moviesRepository) : super(MoviesInitial()) {
     on<FetchMoviesEvent>((event, emit) async {
       try {
         emit(MoviesLoading());
-        moviesList = await _moviesRepository.fetchMoviesList();
+        moviesList = await moviesRepository.fetchMoviesList();
         emit(MoviesLoaded(moviesList));
       } catch (e) {
         emit(MoviesError(e.toString()));
@@ -25,9 +25,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     on<FilterMoviesEvent>((event, emit) async {
       try {
         if (event.keyword.isEmpty) {
-          emit(MoviesFiltered(moviesList));
+          emit(MoviesFiltered(event.moviesList));
         } else {
-          final filteredMoviesList = _moviesRepository.filterMoviesList(
+          final filteredMoviesList = moviesRepository.filterMoviesList(
             event.keyword,
             event.moviesList,
           );

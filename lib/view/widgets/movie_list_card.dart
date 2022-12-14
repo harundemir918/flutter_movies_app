@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/router/app_router.gr.dart';
 import '../../core/utils/size_utils.dart';
 
-class MovieListCard extends StatelessWidget {
+class MoviesListCard extends StatelessWidget {
   final int id;
   final String title;
   final String image;
@@ -13,7 +13,7 @@ class MovieListCard extends StatelessWidget {
   final String runtime;
   final double averageVote;
 
-  const MovieListCard({
+  const MoviesListCard({
     super.key,
     required this.id,
     required this.title,
@@ -30,11 +30,11 @@ class MovieListCard extends StatelessWidget {
         FocusScope.of(context).unfocus();
         context.router.navigate(DetailRoute(id: id));
       },
-      child: _movieListCardBody(context),
+      child: _moviesListCardBody(context),
     );
   }
 
-  Container _movieListCardBody(BuildContext context) {
+  Container _moviesListCardBody(BuildContext context) {
     return Container(
       width: SizeUtils.getWidth(context),
       height: SizeUtils.getDynamicHeight(context, 0.15),
@@ -55,15 +55,15 @@ class MovieListCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _movieListCardRedBox(context),
-          _movieListCardImage(context),
-          _movieListCardInfo(),
+          _moviesListCardRedBox(context),
+          _moviesListCardImage(context),
+          _moviesListCardInfo(),
         ],
       ),
     );
   }
 
-  Container _movieListCardRedBox(BuildContext context) {
+  Container _moviesListCardRedBox(BuildContext context) {
     return Container(
       width: 10,
       height: SizeUtils.getDynamicHeight(context, 0.15),
@@ -76,7 +76,7 @@ class MovieListCard extends StatelessWidget {
     );
   }
 
-  SizedBox _movieListCardImage(BuildContext context) {
+  SizedBox _moviesListCardImage(BuildContext context) {
     return SizedBox(
       width: SizeUtils.getDynamicWidth(context, 0.25),
       height: SizeUtils.getDynamicHeight(context, 0.15),
@@ -87,32 +87,32 @@ class MovieListCard extends StatelessWidget {
     );
   }
 
-  Expanded _movieListCardInfo() {
+  Expanded _moviesListCardInfo() {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            _movieListCardBasicInfo(),
-            _movieListCardVote(),
+            _moviesListCardBasicInfo(),
+            _moviesListCardVote(),
           ],
         ),
       ),
     );
   }
 
-  Expanded _movieListCardBasicInfo() {
+  Expanded _moviesListCardBasicInfo() {
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _movieListCardTitle(),
+          _moviesListCardTitle(),
           Row(
             children: [
-              _movieListCardYear(),
-              _movieListCardDotSign(),
-              _movieListCardDuration(),
+              _moviesListCardYear(),
+              _moviesListCardDotSign(),
+              _moviesListCardDuration(),
             ],
           ),
         ],
@@ -120,9 +120,9 @@ class MovieListCard extends StatelessWidget {
     );
   }
 
-  Text _movieListCardYear() => Text(year);
+  Text _moviesListCardYear() => Text(year);
 
-  Padding _movieListCardDotSign() {
+  Padding _moviesListCardDotSign() {
     return const Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       child: Text(
@@ -135,7 +135,7 @@ class MovieListCard extends StatelessWidget {
     );
   }
 
-  Column _movieListCardVote() {
+  Column _moviesListCardVote() {
     return Column(
       children: [
         const Icon(
@@ -152,9 +152,9 @@ class MovieListCard extends StatelessWidget {
     );
   }
 
-  Text _movieListCardDuration() => Text(runtime);
+  Text _moviesListCardDuration() => Text(runtime);
 
-  Text _movieListCardTitle() {
+  Text _moviesListCardTitle() {
     return Text(
       title,
       style: const TextStyle(

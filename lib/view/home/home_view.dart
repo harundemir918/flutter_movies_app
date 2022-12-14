@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/bloc/home/home_bloc.dart';
 import '../../core/models/genre_model.dart';
 import '../../core/utils/size_utils.dart';
-import '../widgets/genre_list_card.dart';
+import '../widgets/genres_list_card.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/try_again_widget.dart';
 
@@ -20,7 +20,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
-    context.read<HomeBloc>().add(FetchGenresEvent());
     super.initState();
   }
 
@@ -64,8 +63,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Center _buildHomeLoading() =>
-      const Center(child: CircularProgressIndicator());
+  Center _buildHomeLoading() => const Center(
+      key: ValueKey("homeLoadingIndicator"),
+      child: CircularProgressIndicator());
 
   Column _buildHomeLoaded(dynamic state) {
     return Column(
@@ -73,7 +73,7 @@ class _HomeViewState extends State<HomeView> {
       children: [
         _homeHeader(),
         const SizedBox(height: 10),
-        _homeGenreList(genresList: state.genresList),
+        _homeGenresList(genresList: state.genresList),
       ],
     );
   }
@@ -130,14 +130,14 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Flexible _homeGenreList({required List<GenreModel> genresList}) {
+  Flexible _homeGenresList({required List<GenreModel> genresList}) {
     return Flexible(
       child: ListView(
         padding: EdgeInsets.zero,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: genresList
             .map(
-              (genre) => GenreListCard(id: genre.id!, title: genre.name!),
+              (genre) => GenresListCard(id: genre.id!, title: genre.name!),
             )
             .toList(),
       ),

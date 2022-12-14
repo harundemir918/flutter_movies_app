@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import '../../core/router/app_router.gr.dart';
 import '../../core/utils/size_utils.dart';
 
-class GenreListCard extends StatelessWidget {
+class GenresListCard extends StatelessWidget {
   final int id;
   final String title;
 
-  const GenreListCard({super.key, required this.id, required this.title});
+  const GenresListCard({super.key, required this.id, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +17,11 @@ class GenreListCard extends StatelessWidget {
         FocusScope.of(context).unfocus();
         context.router.navigate(MoviesRoute(genre: title));
       },
-      child: _genreListCardBody(context),
+      child: _genresListCardBody(context),
     );
   }
 
-  Container _genreListCardBody(BuildContext context) {
+  Container _genresListCardBody(BuildContext context) {
     return Container(
       width: SizeUtils.getWidth(context),
       height: SizeUtils.getDynamicHeight(context, 0.1),
@@ -42,14 +42,14 @@ class GenreListCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _genreListCardRedBox(context),
-          _genreListCardTitle(),
+          _genresListCardRedBox(context),
+          _genresListCardTitle(),
         ],
       ),
     );
   }
 
-  Container _genreListCardRedBox(BuildContext context) {
+  Container _genresListCardRedBox(BuildContext context) {
     return Container(
       width: 10,
       height: SizeUtils.getDynamicHeight(context, 0.1),
@@ -62,7 +62,7 @@ class GenreListCard extends StatelessWidget {
     );
   }
 
-  Expanded _genreListCardTitle() {
+  Expanded _genresListCardTitle() {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(10),
