@@ -1,23 +1,28 @@
-import 'dart:math';
+import 'package:dio/dio.dart';
 
-import 'package:flutter/foundation.dart';
-
+import '../../../constants/constants.dart';
 import '../../../models/genre_model.dart';
-import '../../mock/mock_movies.dart';
+import '../../../utils/string_utils.dart';
 import '../abstract/abstract_genres_provider.dart';
 
 class GenresProvider extends AbstractGenresProvider {
+  Dio dio = Dio();
+
   @override
   Future<List<GenreModel>> fetchGenresList() async {
     List<GenreModel> genresList = [];
-    var randomBool = Random().nextBool();
-    debugPrint("bool: $randomBool");
-    await Future.delayed(const Duration(seconds: 1));
-    if (randomBool) {
-      genresList = mockGenresList;
+    final url = StringUtils.interpolate(getGenresUrl, params: {
+      "apiKey": apiKey,
+    });
+    try {
+      final response = await dio.get(url);
+      final jsonResponse = response.data["genres"];
+      for (final genre in jsonResponse) {
+        genresList.add(GenreModel.fromJson(genre));
+      }
       return genresList;
-    } else {
-      throw Exception("Failed to fetch data.");
+    } on DioError catch (e) {
+      throw Exception("Failed to fetch data: $e");
     }
   }
 
@@ -26,7 +31,6 @@ class GenresProvider extends AbstractGenresProvider {
     String keyword,
     List<GenreModel> genresList,
   ) {
-    debugPrint("genresLength: ${genresList.length}");
     if (keyword.isEmpty) {
       return [];
     } else {

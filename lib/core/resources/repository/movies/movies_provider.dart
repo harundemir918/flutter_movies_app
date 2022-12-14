@@ -1,37 +1,47 @@
-import 'dart:math';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../constants/constants.dart';
 import '../../../models/movie_model.dart';
-import '../../mock/mock_movies.dart';
+import '../../../utils/string_utils.dart';
 import '../abstract/abstract_movies_provider.dart';
 
 class MoviesProvider extends AbstractMoviesProvider {
+  Dio dio = Dio();
+
   @override
-  Future<List<MovieModel>> fetchMoviesList() async {
+  Future<List<MovieModel>> fetchMoviesList({required int id}) async {
     List<MovieModel> moviesList = [];
-    var randomBool = Random().nextBool();
-    debugPrint("bool: $randomBool");
-    await Future.delayed(const Duration(seconds: 1));
-    if (randomBool) {
-      moviesList = mockMoviesList;
+    try {
+      final url = StringUtils.interpolate(getMoviesUrl, params: {
+        "apiKey": apiKey,
+        "id": id.toString(),
+      });
+      final response = await dio.get(url);
+      final jsonResponse = response.data["results"];
+      for (final movie in jsonResponse) {
+        moviesList.add(MovieModel.fromJson(movie));
+      }
       return moviesList;
-    } else {
-      throw Exception("Failed to fetch data.");
+    } on DioError catch (e) {
+      throw Exception("Failed to fetch data: $e");
     }
   }
 
   @override
   Future<MovieModel> fetchMovieDetail(int id) async {
     MovieModel movie = MovieModel();
-    var randomBool = Random().nextBool();
-    debugPrint("bool: $randomBool");
-    await Future.delayed(const Duration(seconds: 1));
-    if (randomBool) {
-      movie = mockMovieDetail;
+    try {
+      final url = StringUtils.interpolate(getMovieDetailUrl, params: {
+        "apiKey": apiKey,
+        "id": id.toString(),
+      });
+      final response = await dio.get(url);
+      final jsonResponse = response.data;
+      movie = MovieModel.fromJson(jsonResponse);
       return movie;
-    } else {
-      throw Exception("Failed to fetch data.");
+    } on DioError catch (e) {
+      throw Exception("Failed to fetch data: $e");
     }
   }
 
