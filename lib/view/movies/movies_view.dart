@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_app/core/models/genre_model.dart';
 
 import '../../core/bloc/movies/movies_bloc.dart';
 import '../../core/constants/constants.dart';
+import '../../core/models/genre_model.dart';
 import '../../core/models/movie_model.dart';
 import '../../core/utils/size_utils.dart';
 import '../widgets/movies_list_card.dart';
