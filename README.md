@@ -66,3 +66,11 @@ lib/
 
 - Detail Page
     - View movie details using movie id
+
+## Screenshots
+
+![List Genres](screenshots/home-1.png "List Genres")
+![Search Genres](screenshots/home-2.png "Search Genres")
+![List Movies](screenshots/movies-1.png "List Movies")
+![Search Movies](screenshots/movies-2.png "Search Movies")
+![View Movie Detail](screenshots/detail-1.png "View Movie Detail")
