@@ -17,6 +17,7 @@ import 'package:flutter/material.dart' as _i5;
 import '../../view/detail/detail_view.dart' as _i3;
 import '../../view/home/home_view.dart' as _i1;
 import '../../view/movies/movies_view.dart' as _i2;
+import '../models/genre_model.dart' as _i6;
 
 class AppRouter extends _i4.RootStackRouter {
   AppRouter([_i5.GlobalKey<_i5.NavigatorState>? navigatorKey])
@@ -36,7 +37,6 @@ class AppRouter extends _i4.RootStackRouter {
         routeData: routeData,
         child: _i2.MoviesView(
           key: args.key,
-          id: args.id,
           genre: args.genre,
         ),
       );
@@ -93,14 +93,12 @@ class HomeRoute extends _i4.PageRouteInfo<void> {
 class MoviesRoute extends _i4.PageRouteInfo<MoviesRouteArgs> {
   MoviesRoute({
     _i5.Key? key,
-    required int id,
-    required String genre,
+    required _i6.GenreModel genre,
   }) : super(
           MoviesRoute.name,
           path: '/movies',
           args: MoviesRouteArgs(
             key: key,
-            id: id,
             genre: genre,
           ),
         );
@@ -111,19 +109,16 @@ class MoviesRoute extends _i4.PageRouteInfo<MoviesRouteArgs> {
 class MoviesRouteArgs {
   const MoviesRouteArgs({
     this.key,
-    required this.id,
     required this.genre,
   });
 
   final _i5.Key? key;
 
-  final int id;
-
-  final String genre;
+  final _i6.GenreModel genre;
 
   @override
   String toString() {
-    return 'MoviesRouteArgs{key: $key, id: $id, genre: $genre}';
+    return 'MoviesRouteArgs{key: $key, genre: $genre}';
   }
 }
 

@@ -132,14 +132,12 @@ class _HomeViewState extends State<HomeView> {
 
   Flexible _homeGenresList({required List<GenreModel> genresList}) {
     return Flexible(
-      child: ListView(
+      child: ListView.builder(
         padding: EdgeInsets.zero,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: genresList
-            .map(
-              (genre) => GenresListCard(id: genre.id!, title: genre.name!),
-            )
-            .toList(),
+        itemCount: genresList.length,
+        itemBuilder: (context, index) =>
+            GenresListCard(genre: genresList[index]),
       ),
     );
   }

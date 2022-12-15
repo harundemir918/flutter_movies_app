@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/bloc/detail/detail_bloc.dart';
+import '../../core/constants/constants.dart';
 import '../../core/models/genre_model.dart';
 import '../../core/models/movie_model.dart';
 import '../../core/utils/size_utils.dart';
@@ -83,14 +84,14 @@ class _DetailViewState extends State<DetailView> {
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
           foregroundDecoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.3),
+            color: kBlackColor.withOpacity(0.3),
           ),
           child: CachedNetworkImage(
             imageUrl: "https://image.tmdb.org/t/p/original/$url",
             fit: BoxFit.cover,
             progressIndicatorBuilder: (context, _, progress) => const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(kWhiteColor),
               ),
             ),
           ),
@@ -147,7 +148,7 @@ class _DetailViewState extends State<DetailView> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: kBlackColor,
               ),
               TextSpan(
                 text: voteAverage,
@@ -164,7 +165,7 @@ class _DetailViewState extends State<DetailView> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: kBlackColor,
               ),
             ),
             title: "Duration",
@@ -177,7 +178,7 @@ class _DetailViewState extends State<DetailView> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: kBlackColor,
               ),
             ),
             title: "Year",

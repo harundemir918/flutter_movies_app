@@ -1,27 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_movies_app/core/models/movie_model.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/constants/constants.dart';
 import '../../core/router/app_router.gr.dart';
 import '../../core/utils/size_utils.dart';
 
 class MoviesListCard extends StatelessWidget {
-  final int id;
-  final String title;
-  final String posterPath;
-  final String releaseDate;
-  final String originalLanguage;
-  final double voteAverage;
+  final MovieModel movie;
 
   const MoviesListCard({
     super.key,
-    required this.id,
-    required this.title,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.originalLanguage,
-    required this.voteAverage,
+    required this.movie,
   });
 
   @override
@@ -29,7 +21,7 @@ class MoviesListCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-        context.router.navigate(DetailRoute(id: id));
+        context.router.navigate(DetailRoute(id: movie.id!));
       },
       child: _moviesListCardBody(context),
     );
@@ -44,11 +36,11 @@ class MoviesListCard extends StatelessWidget {
         vertical: SizeUtils.getDynamicHeight(context, 0.01),
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kWhiteColor,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: const [
           BoxShadow(
-            color: Colors.black12,
+            color: kShadowColor,
             blurRadius: 4,
             offset: Offset(4, 8), // Shadow position
           ),
@@ -69,7 +61,7 @@ class MoviesListCard extends StatelessWidget {
       width: 10,
       height: SizeUtils.getDynamicHeight(context, 0.15),
       decoration: const BoxDecoration(
-        color: Colors.red,
+        color: kPrimaryColor,
         borderRadius: BorderRadius.horizontal(
           left: Radius.circular(8.0),
         ),
@@ -82,7 +74,7 @@ class MoviesListCard extends StatelessWidget {
       width: SizeUtils.getDynamicWidth(context, 0.25),
       height: SizeUtils.getDynamicHeight(context, 0.15),
       child: CachedNetworkImage(
-        imageUrl: "https://image.tmdb.org/t/p/w500/$posterPath",
+        imageUrl: "https://image.tmdb.org/t/p/w500/${movie.posterPath!}",
         fit: BoxFit.cover,
         progressIndicatorBuilder: (context, _, progress) => const Center(
           child: CircularProgressIndicator(),
@@ -128,7 +120,7 @@ class MoviesListCard extends StatelessWidget {
         flex: 2,
         child: Text(
           DateFormat("MMM d, yyyy").format(
-            DateTime.parse(releaseDate),
+            DateTime.parse(movie.releaseDate!),
           ),
         ),
       );
@@ -151,10 +143,10 @@ class MoviesListCard extends StatelessWidget {
       children: [
         const Icon(
           Icons.star_rounded,
-          color: Colors.amber,
+          color: kStarColor,
         ),
         Text(
-          voteAverage.toStringAsFixed(1),
+          movie.voteAverage!.toStringAsFixed(1),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -165,13 +157,13 @@ class MoviesListCard extends StatelessWidget {
 
   Expanded _moviesListCardOriginalLanguage() => Expanded(
         child: Text(
-          originalLanguage.toUpperCase(),
+          movie.originalLanguage!.toUpperCase(),
         ),
       );
 
   Text _moviesListCardTitle() {
     return Text(
-      title,
+      movie.title!,
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,

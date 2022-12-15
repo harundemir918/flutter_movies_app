@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movies_app/core/models/genre_model.dart';
 
 import '../../core/bloc/movies/movies_bloc.dart';
+import '../../core/constants/constants.dart';
 import '../../core/models/movie_model.dart';
 import '../../core/utils/size_utils.dart';
 import '../widgets/movies_list_card.dart';
@@ -9,12 +11,10 @@ import '../widgets/search_bar.dart';
 import '../widgets/try_again_widget.dart';
 
 class MoviesView extends StatefulWidget {
-  final int id;
-  final String genre;
+  final GenreModel genre;
 
   const MoviesView({
     Key? key,
-    required this.id,
     required this.genre,
   }) : super(key: key);
 
@@ -27,7 +27,7 @@ class _MoviesViewState extends State<MoviesView> {
 
   @override
   void initState() {
-    context.read<MoviesBloc>().add(FetchMoviesEvent(id: widget.id));
+    context.read<MoviesBloc>().add(FetchMoviesEvent(id: widget.genre.id!));
     super.initState();
   }
 
@@ -49,14 +49,14 @@ class _MoviesViewState extends State<MoviesView> {
   AppBar _moviesAppBar() {
     return AppBar(
       title: Text(
-        widget.genre,
-        style: const TextStyle(color: Colors.black),
+        widget.genre.name!,
+        style: const TextStyle(color: kBlackColor),
       ),
       centerTitle: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: kTransparentColor,
       elevation: 0,
       iconTheme: const IconThemeData(
-        color: Colors.black,
+        color: kBlackColor,
       ),
     );
   }
@@ -104,8 +104,9 @@ class _MoviesViewState extends State<MoviesView> {
 
   TryAgainWidget _buildMoviesError() {
     return TryAgainWidget(
-      onPressed: () =>
-          context.read<MoviesBloc>().add(FetchMoviesEvent(id: widget.id)),
+      onPressed: () => context
+          .read<MoviesBloc>()
+          .add(FetchMoviesEvent(id: widget.genre.id!)),
     );
   }
 
@@ -128,21 +129,13 @@ class _MoviesViewState extends State<MoviesView> {
 
   Flexible _moviesList({required List<MovieModel> moviesList}) {
     return Flexible(
-      child: ListView(
+      child: ListView.builder(
         padding: EdgeInsets.zero,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: moviesList
-            .map(
-              (movie) => MoviesListCard(
-                id: movie.id!,
-                title: movie.title!,
-                posterPath: movie.posterPath!,
-                releaseDate: movie.releaseDate!,
-                originalLanguage: movie.originalLanguage!,
-                voteAverage: movie.voteAverage!,
-              ),
-            )
-            .toList(),
+        itemCount: moviesList.length,
+        itemBuilder: (context, index) => MoviesListCard(
+          movie: moviesList[index],
+        ),
       ),
     );
   }

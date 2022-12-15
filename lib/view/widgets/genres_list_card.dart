@@ -1,21 +1,26 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_movies_app/core/models/genre_model.dart';
 
+import '../../core/constants/constants.dart';
 import '../../core/router/app_router.gr.dart';
 import '../../core/utils/size_utils.dart';
 
 class GenresListCard extends StatelessWidget {
-  final int id;
-  final String title;
+  final GenreModel genre;
 
-  const GenresListCard({super.key, required this.id, required this.title});
+  const GenresListCard({super.key, required this.genre});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-        context.router.navigate(MoviesRoute(id: id, genre: title));
+        context.router.navigate(
+          MoviesRoute(
+            genre: genre,
+          ),
+        );
       },
       child: _genresListCardBody(context),
     );
@@ -30,11 +35,11 @@ class GenresListCard extends StatelessWidget {
         vertical: SizeUtils.getDynamicHeight(context, 0.01),
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kWhiteColor,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: const [
           BoxShadow(
-            color: Colors.black12,
+            color: kShadowColor,
             blurRadius: 4,
             offset: Offset(4, 8), // Shadow position
           ),
@@ -54,7 +59,7 @@ class GenresListCard extends StatelessWidget {
       width: 10,
       height: SizeUtils.getDynamicHeight(context, 0.1),
       decoration: const BoxDecoration(
-        color: Colors.red,
+        color: kPrimaryColor,
         borderRadius: BorderRadius.horizontal(
           left: Radius.circular(8.0),
         ),
@@ -66,7 +71,7 @@ class GenresListCard extends StatelessWidget {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Text(title),
+        child: Text(genre.name!),
       ),
     );
   }
