@@ -2,6 +2,39 @@
 
 Movies App is a Flutter app for listing genres/movies and getting movie details.
 
+## Installation
+
+1. Clone the Git repository:
+
+```sh
+git clone https://github.com/harundemir918/flutter_movies_app.git
+```
+
+2. Get the packages that the app uses:
+
+```sh
+flutter pub get
+```
+
+3. To use the app, you need an API key from TMDB.
+* Go to [TMDB Website](https://www.themoviedb.org/) and create a new account using the link on the top-right.
+* After creating account, click API on the left side of the Account page.
+* Request a new API key with filling the form.
+* Save the key.
+
+4. Open the app folder, go to ```lib/core/config``` , copy ```config_example.dart```, paste in the same folder and rename it as ```config.dart```. It must be like this:
+
+```
+lib/
+|____core/
+     |____config/
+          |____config.dart // create this file
+          |____config_example.dart
+```
+
+5. Paste your API key to ```configApiKey``` in ```config.dart```.
+6. Run the app using ```flutter run``` (you can also use the built-in functions of the IDE that you're using (Android Studio - VS Code etc)).
+
 ## Used Packages
 
 - [flutter_bloc](https://pub.dev/packages/flutter_bloc) (For State Management)
